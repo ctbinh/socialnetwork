@@ -1,0 +1,15 @@
+:root {
+  --primary: #2479d8;
+  --secondary: #d8dadf;
+  --warning: #D32F2F;
+  --bg: #F9F9F9;
+  --load: #F0F2F5;
+  --target: #F0F2F5
+}
+* {
+  margin: 0;
+}
+body {
+  font-family: 'Roboto', sans-serif;
+  background-color: #F9F9F9;
+}
