@@ -13,6 +13,7 @@ const helmet = require("helmet");
 const profileRouter = require("./routes/profileRoutes");
 const followRouter = require("./routes/followRoutes");
 const missionRouter = require("./routes/missionRoutes");
+const notificationRouter = require('./routes/notificationRoutes')
 
 if (process.env.NODE_ENV === "development") {
   app.use(morgan("dev"));
@@ -46,6 +47,7 @@ app.use("/api/profiles", profileRouter);
 app.use("/api/:slug/comments", commentRouter);
 app.use("/api/follows", followRouter);
 app.use("/api/missions", missionRouter);
+app.use("/api/notifications", notificationRouter);
 
 app.all("*", (req, res, next) => {
   next(new AppError(`Can't find ${req.originalUrl} on this server!`, 404));

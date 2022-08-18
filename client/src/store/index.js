@@ -4,6 +4,7 @@ import uiReducer from "./ui";
 import articleReducer from "./article";
 import homeReducer from "./home";
 import profileReducer from "./profile";
+import notificationReducer from "./notification";
 import { persistReducer, persistStore } from "redux-persist";
 import storage from "redux-persist/lib/storage";
 
@@ -17,7 +18,8 @@ const rootReducer = combineReducers({
   ui: uiReducer,
   article: articleReducer,
   home: homeReducer,
-  profile: profileReducer
+  profile: profileReducer,
+  notification: notificationReducer,
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

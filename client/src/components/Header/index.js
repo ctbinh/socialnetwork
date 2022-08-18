@@ -19,10 +19,11 @@ import LoginIcon from "@mui/icons-material/Login";
 import PersonIcon from "@mui/icons-material/Person";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { uiActions } from "../store/ui";
+import { uiActions } from "../../store/ui";
 import styled from "styled-components";
-import { authActions } from "../store/auth";
-import UserService from "../api/services/User";
+import { authActions } from "../../store/auth";
+import UserService from "../../api/services/User";
+import NotificationButton from "./NotificationButton";
 
 const Header = () => {
   const user = useSelector((state) => state.auth.user);
@@ -61,7 +62,7 @@ const Header = () => {
   const logout = async () => {
     handleCloseUserMenu();
     const data = await UserService.logout();
-    if (data.status === 'success') {
+    if (data.status === "success") {
       navigate("/login", { replace: true });
       dispatch(authActions.logout());
     }
@@ -152,15 +153,7 @@ const Header = () => {
               RealWorld
             </Typography>
             <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
-              {/* {pages.map((page) => (
-              <Button
-                key={page}
-                onClick={handleCloseNavMenu}
-                sx={{ my: 2, color: "black", display: "block" }}
-              >
-                {page}
-              </Button>
-            ))} */}
+              hello
             </Box>
             <Box sx={{ flexGrow: 0, display: { xs: "none", md: "flex" } }}>
               <Stack direction="row" spacing={2}>
@@ -176,18 +169,21 @@ const Header = () => {
                   Home
                 </Button>
                 {isAuthenticated && (
-                  <Button
-                    key="create"
-                    direction="row"
-                    sx={{
-                      color: "black",
-                      display: "block",
-                      ":hover": { color: "#2479D8" },
-                    }}
-                    onClick={() => navigate("/editor", { replace: true })}
-                  >
-                    Create Article
-                  </Button>
+                  <>
+                    <Button
+                      key="create"
+                      direction="row"
+                      sx={{
+                        color: "black",
+                        display: "block",
+                        ":hover": { color: "#2479D8" },
+                      }}
+                      onClick={() => navigate("/editor", { replace: true })}
+                    >
+                      Create Article
+                    </Button>
+                    <NotificationButton />
+                  </>
                 )}
 
                 {!isAuthenticated && (

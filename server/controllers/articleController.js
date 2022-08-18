@@ -5,6 +5,7 @@ const Tag = require("../models/tagModel");
 const AppError = require("../utils/AppError");
 const Comment = require("../models/commentModel");
 const catchAsync = require("../utils/catchAsync");
+const Notification = require("../models/notificationModel");
 
 exports.createArticle = catchAsync(async (req, res, next) => {
   let emptyFields = [];
@@ -107,21 +108,21 @@ exports.getArticle = catchAsync(async (req, res, next) => {
     },
     null,
     {
-      skip: (offset-1)*limit,
+      skip: (offset - 1) * limit,
       limit: limit,
-      sort: {createdAt: -1}
+      sort: { createdAt: -1 },
     }
   );
   const countComment = await Comment.countDocuments({
     article: article._id,
     isReply: false,
-  })
+  });
   res.status(200).json({
     status: "success",
     data: {
       article,
       comments,
-      countComment
+      countComment,
     },
   });
 });
@@ -129,7 +130,7 @@ exports.getArticle = catchAsync(async (req, res, next) => {
 exports.loadMoreComment = catchAsync(async (req, res, next) => {
   const offset = parseInt(req.query.offset);
   const limit = parseInt(req.query.limit);
-  const articleId = req.params.id
+  const articleId = req.params.id;
   const comments = await Comment.find(
     {
       article: articleId,
@@ -137,9 +138,9 @@ exports.loadMoreComment = catchAsync(async (req, res, next) => {
     },
     null,
     {
-      skip: (offset-1)*limit,
+      skip: (offset - 1) * limit,
       limit: limit,
-      sort: {createdAt: -1}
+      sort: { createdAt: -1 },
     }
   );
   res.status(200).json({
@@ -291,6 +292,14 @@ exports.favoriteArticle = catchAsync(async (req, res, next) => {
       $pull: { favorites: req.user._id },
     };
     x = -1;
+  } else if (`${req.user._id}` !== `${curArticle.author._id}`) {
+    await Notification.create({
+      to: curArticle.author._id,
+      type: "Favorite",
+      path: "/article",
+      article: curArticle._id,
+      user: req.user._id
+    });
   }
   await User.findOneAndUpdate(
     { _id: curArticle.author._id },
@@ -298,6 +307,7 @@ exports.favoriteArticle = catchAsync(async (req, res, next) => {
       $inc: { totalLikes: x, curExp: x },
     }
   );
+
   const article = await Article.findOneAndUpdate(
     { slug: req.params.slug },
     options,
