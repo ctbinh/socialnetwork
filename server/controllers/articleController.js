@@ -6,6 +6,7 @@ const AppError = require("../utils/AppError");
 const Comment = require("../models/commentModel");
 const catchAsync = require("../utils/catchAsync");
 const Notification = require("../models/notificationModel");
+const { sendNotification } = require("./notificationController");
 
 exports.createArticle = catchAsync(async (req, res, next) => {
   let emptyFields = [];
@@ -293,12 +294,12 @@ exports.favoriteArticle = catchAsync(async (req, res, next) => {
     };
     x = -1;
   } else if (`${req.user._id}` !== `${curArticle.author._id}`) {
-    await Notification.create({
+    sendNotification({
       to: curArticle.author._id,
       type: "Favorite",
       path: "/article",
       article: curArticle._id,
-      user: req.user._id
+      user: req.user._id,
     });
   }
   await User.findOneAndUpdate(

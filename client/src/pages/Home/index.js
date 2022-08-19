@@ -79,7 +79,7 @@ const Home = () => {
       dispatch(fetchGlobalFeed());
     }
     setIsFirst(false);
-  }, [dispatch, isFilter, isFirst]);
+  }, [dispatch, isFilter, isFirst, isAuthenticated]);
 
   return (
     <Container>

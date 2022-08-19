@@ -15,10 +15,12 @@ import VerifyAlert from "./components/VerifyAlert";
 import ReqPassReset from "./pages/ReqPassReset";
 import PassReset from "./pages/PassReset";
 import styled from "styled-components";
+import { connectWithSocketServer } from "./realtimeCommunication/socketConnection";
 
 const App = () => {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.auth.user);
+  const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
   const logout = useCallback(() => {
     dispatch(authActions.logout());
   }, [dispatch]);
@@ -27,7 +29,10 @@ const App = () => {
     if (new Date(localStorage.getItem("tokenExpireIn")) < new Date()) {
       logout();
     }
-  }, [logout]);
+    if (isAuthenticated) {
+      connectWithSocketServer(localStorage.getItem("jwt"));
+    }
+  }, [logout, isAuthenticated]);
 
   return (
     <>

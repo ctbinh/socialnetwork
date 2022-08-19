@@ -70,6 +70,7 @@ const Login = () => {
     if (data.user) {
       dispatch(authActions.login({ user: data.user }));
       localStorage.setItem("tokenExpireIn", data.tokenExpireIn);
+      localStorage.setItem("jwt", data.token);
     } else {
       dispatch(
         uiActions.displayAlert({

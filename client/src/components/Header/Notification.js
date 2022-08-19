@@ -24,7 +24,7 @@ const Notification = ({ notification }) => {
             article: "{notification.article.title}"
           </p>
           <Date>
-            <Moment fromNow>{notification.createdAt}</Moment>
+            <Moment fromNow>{notification.updatedAt}</Moment>
           </Date>
         </Content>
       </Row>

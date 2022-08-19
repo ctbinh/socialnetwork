@@ -1,5 +1,6 @@
 const Notification = require("../models/notificationModel");
 const catchAsync = require("../utils/catchAsync");
+const notificationsUpdate = require("../socketHandlers/updates/notifications");
 
 exports.getNumUnreadNotifications = catchAsync(async (req, res) => {
   const filter = { to: req.user._id, seen: false };
@@ -21,7 +22,10 @@ exports.getMyNotifications = catchAsync(async (req, res) => {
     options.skip = (offset - 1) * limit;
   }
   const notifications = await Notification.find(filter, null, options)
-    .populate([{ path: 'user', select: "image username" }, { path: 'article', select: "title slug" }])
+    .populate([
+      { path: "user", select: "image username" },
+      { path: "article", select: "title slug" },
+    ])
     .sort({
       createdAt: -1,
     });
@@ -48,4 +52,20 @@ exports.createNotification = catchAsync(async (req, res) => {
       message: "Invalid data sent!",
     });
   }
+});
+
+exports.sendNotification = catchAsync(async (body) => {
+  const existed = await Notification.findOne({
+    to: body.to,
+    type: body.type,
+    user: body.user,
+    article: body.article,
+    path: body.path,
+  });
+  if (existed) {
+    await Notification.findByIdAndUpdate(existed._id, { seen: false });
+  } else {
+    await Notification.create(body);
+  }
+  notificationsUpdate.updateNotifications(body.to.toString());
 });
