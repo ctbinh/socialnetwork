@@ -1,0 +1,93 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE")
+}
+
+model articles {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  v           Int      @map("__v")
+  author      String   @db.ObjectId
+  body        String
+  createdAt   DateTime @db.Date
+  description String
+  favorites   String[]
+  slug        String
+  tagList     String[]
+  thumbnail   String
+  title       String
+  updatedAt   DateTime @db.Date
+  user        users    @relation(fields: [author], references: [id])
+}
+
+model follows {
+  id   String @id @default(auto()) @map("_id") @db.ObjectId
+  v    Int    @map("__v")
+  from String @db.ObjectId
+  to   String @db.ObjectId
+  fromUser    users   @relation("fromUser",fields: [from], references: [id])
+  toUser      users   @relation("toUser", fields: [to], references: [id])
+
+  @@unique([from, to], map: "from_1_to_1")
+}
+
+model notifications {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  v         Int      @map("__v")
+  article   String   @db.ObjectId
+  createdAt DateTime @db.Date
+  path      String
+  seen      Boolean
+  to        String   @db.ObjectId
+  type      String
+  updatedAt DateTime @db.Date
+  user      String   @db.ObjectId
+}
+
+model passwordresets {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  v           Int      @map("__v")
+  createdAt   DateTime @db.Date
+  expiresAt   DateTime @db.Date
+  resetString String
+  userId      String
+}
+
+model tags {
+  id      String @id @default(auto()) @map("_id") @db.ObjectId
+  v       Int    @map("__v")
+  count   Int
+  tagName String
+}
+
+model users {
+  id               String     @id @default(auto()) @map("_id") @db.ObjectId
+  v                Int        @map("__v")
+  /// Could not determine type: the field only had null or empty values in the sample set.
+  badges           Json?
+  bgImage          String
+  createdAt        DateTime   @db.Date
+  curExp           Int
+  email            String     @unique(map: "email_1")
+  expNeeded        Int
+  image            String
+  level            Int
+  /// Could not determine type: the field only had null or empty values in the sample set.
+  missionCollected Json?
+  password         String
+  passwordChangeAt DateTime?  @db.Date
+  totalLikes       Int
+  updatedAt        DateTime   @db.Date
+  username         String     @unique(map: "username_1")
+  verified         Boolean
+  articles         articles[]
+  followings       follows[]  @relation("fromUser")
+  followers        follows[]  @relation("toUser")
+}
+
+model userverifications {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+}
