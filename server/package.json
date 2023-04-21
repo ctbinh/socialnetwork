@@ -4,7 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon server.js"
+    "start": "nodemon server.js",
+    "docker:clear": "docker ps --filter status=exited -q | xargs docker rm",
+    "bootstrap": "docker-compose -f docker-compose.yml up -d --build"
   },
   "keywords": [],
   "author": "",
@@ -29,7 +31,7 @@
     "validator": "^13.7.0"
   },
   "devDependencies": {
-    "nodemon": "^2.0.16",
+    "nodemon": "^2.0.22",
     "prisma": "^4.9.0"
   }
 }

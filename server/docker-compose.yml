@@ -1,0 +1,27 @@
+services:
+  app:
+    image: node:18-alpine
+    command: sh -c "npm i && npm start"
+    ports:
+      - 5000:5000
+    working_dir: /app
+    volumes:
+      - ./:/app
+    networks:
+      - server-network
+
+  mongodb:
+    image: mongo
+    ports:
+      - 27017:27017
+    volumes:
+      - data_mongodb:/data/db
+    networks:
+      - server-network
+
+volumes:
+  data_mongodb:
+
+networks:
+  server-network:
+    driver: bridge

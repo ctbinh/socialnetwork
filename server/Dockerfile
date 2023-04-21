@@ -2,7 +2,7 @@ FROM node:18-alpine
 
 WORKDIR /app
 
-ENV DATABASE=mongodb+srv://ctbinh:Binh171201@cluster0.b6wiu.mongodb.net/?retryWrites=true&w=majority
+ENV DATABASE=mongodb://root:d3v1n3ng1n33r@localhost:27017/socialNetwork?authSource=admin&replicaSet=rs0
 ENV PORT=80
 ENV NODE_ENV=production
 ENV JWT_SECRET=this-is-my-secret-jwt-secret-very-long
